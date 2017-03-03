@@ -1,48 +1,89 @@
 package com.example.firstapp;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by guoxing on 3/3/2017.
  */
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
-    private String[] mDataset;
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.DataObjectHolder>{
+    private static String LOG_TAG = MainAdapter.class.getSimpleName();
+    private ArrayList<DataObject> mDataset;
+    private static MyClickListener myClickListener;
 
-    public MainAdapter(String[] myDataSet) {
-        mDataset = myDataSet;
+    public MainAdapter(ArrayList<DataObject> myDataset) {
+        mDataset = myDataset;
+    }
+
+
+    @Override
+    public DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recyclerview_item, parent, false);
+
+        DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
+        return dataObjectHolder;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_text_view, parent, false);
-
-        return new ViewHolder(v);
+    public void onBindViewHolder(DataObjectHolder holder, int position) {
+        holder.label.setText(mDataset.get(position).getmText1());
+        holder.dateTime.setText(mDataset.get(position).getmText2());
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(mDataset[position]);
+    public void addItem(DataObject dataObj, int index) {
+        mDataset.add(dataObj);
+        notifyItemInserted(index);
+    }
 
+    public void deleteItem(int index) {
+        mDataset.remove(index);
+        notifyItemRemoved(index);
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
+    }
+
+    /**
+     * see http://www.truiton.com/2015/02/android-recyclerview-tutorial/
+     */
+
+    public static class DataObjectHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+        TextView label;
+        TextView dateTime;
+
+        public DataObjectHolder(View itemView) {
+            super(itemView);
+            label = (TextView) itemView.findViewById(R.id.textView);
+            dateTime = (TextView) itemView.findViewById(R.id.textView2);
+            Log.i(LOG_TAG, "Adding Listener");
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            myClickListener.onItemClick(getLayoutPosition(), v);
+        }
+
+
+    }
+    public void setOnItemClickListener(MyClickListener myClickListener) {
+        this.myClickListener = myClickListener;
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            mTextView = (TextView) itemView;
-        }
+
+    public interface MyClickListener {
+        public void onItemClick(int position, View v);
     }
 }
