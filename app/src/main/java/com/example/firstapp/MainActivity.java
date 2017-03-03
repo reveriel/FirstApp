@@ -1,13 +1,9 @@
 package com.example.firstapp;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 /**
@@ -19,14 +15,17 @@ public class MainActivity extends Activity {
 
     public static String[] myDataSet = {"A", "B"};
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.activity_main, CardViewFragment.newInstance())
+                    .commit();
+        }
 
 //        mRecyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
 //
