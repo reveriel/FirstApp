@@ -22,7 +22,7 @@
             card_view:cardBackgroundColor="@color/cardview_initial_background"
             card_view:cardCornerRadius="8dp"
             android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginht="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
             >
 
             <TextView
